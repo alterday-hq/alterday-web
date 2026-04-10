@@ -6,7 +6,8 @@ import { GridScan } from '@/components/GridScan';
 import GlitchText from '@/components/GlitchText';
 import DecryptedText from '@/components/DecryptedText';
 import { darkPalette, lightPalette } from '@/shared/colors';
-import logoSrc from '@/assets/logo/logo-base-transparent.svg';
+import logoDark from '@/assets/logo/logo-base-transparent-dark-theme.svg';
+import logoLight from '@/assets/logo/logo-base-transparent-light-theme.svg';
 
 const GitHubIcon = () => (
   <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
@@ -113,7 +114,7 @@ export default function LoginPage() {
         ].join(' ')}>
 
           <div className="flex justify-center mb-5">
-            <img src={logoSrc} alt="Alterday" width={80} height={80} />
+            <img src={isDark ? logoDark : logoLight} alt="Alterday" width={80} height={80} />
           </div>
 
           <p className="font-mono text-sm text-muted-foreground mb-5 text-center">
