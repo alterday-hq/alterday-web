@@ -1,7 +1,7 @@
 {
   "auth": {
     "login": {
-      "title": "Login",
+      "title": "Logowanie",
       "subtitle": "Wprowadź dane dostępowe, aby rozpocząć proces synchronizacji.",
       "emailLabel": "Adres Cyfrowy",
       "emailPlaceholder": "użytkownik@sieć.sys",
