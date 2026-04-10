@@ -28,16 +28,12 @@ export default function LoginPage() {
   const [isDark, setIsDark] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Sync theme to <html> so body bg-background and all CSS vars resolve correctly
+  // Background is always dark — dark class stays on <html> permanently.
+  // isDark only controls card opacity and accent intensity.
   useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    return () => root.classList.remove('dark');
-  }, [isDark]);
+    document.documentElement.classList.add('dark');
+    return () => document.documentElement.classList.remove('dark');
+  }, []);
 
   const toggleLanguage = () =>
     i18n.changeLanguage(i18n.language === 'en' ? 'pl' : 'en');
@@ -84,11 +80,11 @@ export default function LoginPage() {
       </div>
 
       {/* ── Page content ─────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex min-h-svh flex-col items-center justify-center px-4 py-16">
+      <div className="relative z-10 flex min-h-svh flex-col items-center justify-center px-4 py-8">
 
         {/* GlitchText on the raw grid — solid bg always matches dark background */}
         <div
-          className="mb-6 text-center"
+          className="mb-4 text-center"
           style={{
             '--glitch-bg': darkPalette.background,
             '--glitch-size': 'clamp(3.5rem, 8vw, 5.5rem)',
@@ -99,14 +95,30 @@ export default function LoginPage() {
           </GlitchText>
         </div>
 
-        {/* Glass card */}
-        <div className="w-full max-w-[380px] rounded-2xl border border-primary/15 bg-card/70 backdrop-blur-2xl px-8 py-8 shadow-2xl">
+        {/*
+          Light mode: card is nearly transparent so the dark grid shows through —
+          dark bg + glass works, dark bg + white card doesn't.
+          Accent is overridden to the muted light-palette colour via a CSS var.
+        */}
+        <div
+          className={[
+            'w-full max-w-[380px] rounded-2xl border backdrop-blur-2xl px-8 py-6 shadow-2xl',
+            isDark
+              ? 'bg-card/75 border-primary/15'
+              : 'bg-card/30 border-primary/25',
+          ].join(' ')}
+          style={isDark ? {} : {
+            '--primary': 'oklch(0.573 0.097 175)',
+            '--primary-foreground': 'oklch(0.108 0.015 264)',
+            '--ring': 'oklch(0.573 0.097 175)',
+          } as React.CSSProperties}
+        >
 
-          <div className="flex justify-center mb-6">
-            <img src={logoSrc} alt="Alterday" width={64} height={64} />
+          <div className="flex justify-center mb-5">
+            <img src={logoSrc} alt="Alterday" width={80} height={80} />
           </div>
 
-          <p className="font-mono text-sm text-muted-foreground mb-7 text-center">
+          <p className="font-mono text-sm text-muted-foreground mb-5 text-center">
             <DecryptedText
               text={t('auth.login.subtitle')}
               animateOn="view"
@@ -201,7 +213,7 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <p className="mt-8 text-center text-xs font-mono text-muted-foreground/50">
+          <p className="mt-6 text-center text-xs font-mono text-muted-foreground/50">
             {t('auth.login.noAccount')}{' '}
             <Link to="/register" className="text-primary/70 hover:text-primary transition-colors">
               {t('auth.login.signUp')}
