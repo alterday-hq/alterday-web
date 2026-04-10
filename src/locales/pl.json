@@ -15,10 +15,22 @@
     },
     "register": {
       "title": "Rejestracja",
-      "subtitle": "Utwórz swoją tożsamość w systemie.",
+      "headline1": "Kwantyfikuj każdą",
+      "headline2": "alternatywną",
+      "headline3": "rzeczywistość.",
+      "subtitle": "Rozpocznij symulację. Utwórz swoją tożsamość w systemie.",
+      "usernameLabel": "Znacznik Tożsamości",
+      "usernamePlaceholder": "agent_nazwa",
+      "emailLabel": "Adres Cyfrowy",
+      "emailPlaceholder": "użytkownik@sieć.sys",
+      "passwordLabel": "Klucz Dostępu",
+      "passwordPlaceholder": "••••••••",
+      "confirmLabel": "Zweryfikuj Klucz Dostępu",
+      "confirmPlaceholder": "••••••••",
       "submit": "Inicjalizuj Konto",
       "hasAccount": "Masz już konto w systemie?",
-      "signIn": "Nawiąż Połączenie"
+      "signIn": "Nawiąż Połączenie",
+      "statsJoined": "tożsamości zainicjalizowanych"
     }
   },
   "common": {

@@ -15,10 +15,22 @@
     },
     "register": {
       "title": "Register",
-      "subtitle": "Create your identity in the system.",
+      "headline1": "Quantify every",
+      "headline2": "alternate",
+      "headline3": "reality.",
+      "subtitle": "Start your simulation. Create your identity in the system.",
+      "usernameLabel": "Identity Tag",
+      "usernamePlaceholder": "agent_username",
+      "emailLabel": "Digital Address",
+      "emailPlaceholder": "user@network.sys",
+      "passwordLabel": "Access Key",
+      "passwordPlaceholder": "••••••••",
+      "confirmLabel": "Verify Access Key",
+      "confirmPlaceholder": "••••••••",
       "submit": "Initialize Account",
       "hasAccount": "Already in the system?",
-      "signIn": "Establish Connection"
+      "signIn": "Establish Connection",
+      "statsJoined": "identities initialized"
     }
   },
   "common": {
