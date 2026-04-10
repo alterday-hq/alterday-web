@@ -104,10 +104,11 @@ export default function RegisterPage() {
       </div>
 
       {/* ── Page content ─────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex min-h-svh flex-col lg:flex-row items-center justify-center px-4 py-12 gap-12 lg:gap-24">
+      <div className="relative z-10 flex min-h-svh flex-col lg:flex-row items-center justify-center px-4 py-6 gap-8 lg:gap-40">
 
         {/* ── Left panel — headline + metrics + social proof ───────────────────── */}
-        <div className="flex flex-col gap-8 w-full max-w-[400px]">
+        {/* order-2 on mobile so the form panel appears first on small screens */}
+        <div className="flex flex-col gap-5 w-full max-w-[400px] order-2 lg:order-1">
 
           {/* 4-line headline */}
           <div
@@ -143,7 +144,7 @@ export default function RegisterPage() {
           {/* System metrics panel */}
           <div
             className={[
-              "rounded-2xl backdrop-blur-2xl p-5 space-y-4",
+              "rounded-2xl backdrop-blur-2xl p-4 space-y-3",
               isDark
                 ? "bg-card/60 border border-primary/20"
                 : "bg-card/80 border border-primary/30 shadow-[0_4px_24px_rgba(0,150,125,0.12)]",
@@ -212,19 +213,20 @@ export default function RegisterPage() {
         </div>
 
         {/* ── Right panel — registration form ─────────────────────────────────── */}
-        <div className="w-full max-w-[380px]">
-          {/* GlitchText title */}
+        {/* order-1 on mobile so this appears above the left panel on small screens */}
+        <div className="w-full max-w-[380px] order-1 lg:order-2">
+          {/* Title above the card — font sized to fit within max-w-[380px] */}
           <div
-            className="mb-4 text-center"
+            className="mb-4"
             style={
               {
                 "--glitch-bg": palette.background,
                 "--glitch-color": isDark ? "#ffffff" : "#0F1117",
-                "--glitch-size": "clamp(3rem, 7vw, 4.5rem)",
+                "--glitch-size": "clamp(2.6rem, 5.5vw, 4.2rem)",
               } as React.CSSProperties
             }
           >
-            <GlitchText speed={1} enableShadows={isDark} enableOnHover={false} className="font-mono">
+            <GlitchText speed={1} enableShadows={isDark} enableOnHover={false} className="font-mono text-center">
               {t("auth.register.title")}
             </GlitchText>
           </div>
@@ -232,17 +234,17 @@ export default function RegisterPage() {
           {/* Glass card */}
           <div
             className={[
-              "w-full rounded-2xl backdrop-blur-2xl px-8 py-6",
+              "w-full rounded-2xl backdrop-blur-2xl px-7 py-5",
               isDark
                 ? "bg-card/80 border border-primary/20 shadow-2xl"
                 : "bg-card/90 border border-primary/30 shadow-[0_8px_40px_rgba(0,150,125,0.15)]",
             ].join(" ")}
           >
-            <div className="flex justify-center mb-5">
-              <img src={isDark ? logoDark : logoLight} alt="Alterday" width={72} height={72} />
+            <div className="flex justify-center mb-3">
+              <img src={isDark ? logoDark : logoLight} alt="Alterday" width={60} height={60} />
             </div>
 
-            <p className="font-mono text-sm text-muted-foreground mb-5 text-center">
+            <p className="font-mono text-sm text-muted-foreground mb-4 text-center">
               <DecryptedText
                 key={i18n.language + "subtitle"}
                 text={t("auth.register.subtitle")}
@@ -253,7 +255,7 @@ export default function RegisterPage() {
               />
             </p>
 
-            <form className="space-y-3.5" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
               {/* Subject Name */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -367,7 +369,7 @@ export default function RegisterPage() {
             </form>
 
             {/* OAuth divider */}
-            <div className="relative my-5">
+            <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-primary/15" />
               </div>
@@ -400,7 +402,7 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            <p className="mt-5 text-center text-xs font-mono text-muted-foreground/60">
+            <p className="mt-4 text-center text-xs font-mono text-muted-foreground/60">
               {t("auth.register.hasAccount")}{" "}
               <Link to="/login" className="text-primary/70 hover:text-primary transition-colors">
                 {t("auth.register.signIn")}
