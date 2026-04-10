@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.vite/
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+
+# Lock files (too noisy, low signal)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Design assets
+design/
+public/
+src/assets/
+
+# Generated / binary
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.ico
+*.svg
+*.woff
+*.woff2
+*.ttf
+
+# Cache & tooling artefacts
+.eslintcache
+tsconfig.tsbuildinfo
+coverage/
