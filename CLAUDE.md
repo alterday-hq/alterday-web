@@ -75,6 +75,40 @@ npx shadcn@latest add @react-bits/<Component>  # e.g. npx shadcn@latest add @rea
 
 The user provides the package/component names. Always remap any color props to match the brand palette above.
 
+## Translations (i18n)
+
+- Language files: `src/locales/en.json` and `src/locales/pl.json`
+- Config: `src/i18n.ts` (initialised in `main.tsx`)
+- **Every new UI element with visible text must have keys in both locale files** — no hardcoded strings in components
+- Use `useTranslation()` → `t('key')` in all components
+- Key structure: `domain.page.element` e.g. `auth.login.emailLabel`
+
+## App tone — matrix / simulation style
+
+All user-facing copy follows a matrix/cyberpunk/simulation voice. Never use generic SaaS language.
+
+| Generic | Alterday style |
+|---------|---------------|
+| Email | Digital Address |
+| Password | Access Key |
+| Login / Sign in | Establish Connection |
+| Register / Sign up | Initialize Account |
+| Forgot password | Key recovery protocol |
+| Or continue with | Alternative authentication |
+| Not registered? | Not in the system? |
+| Settings | System Configuration |
+| Dashboard | Command Center |
+| Notifications | System Signals |
+| Search | Scan |
+| Save | Commit |
+| Delete | Purge |
+| Loading | Synchronizing |
+| Error | System Fault |
+
+Subtitles and descriptions should feel like terminal output:
+> "Enter your credentials to begin the synchronization process."
+> "Quantify every alternate possibility."
+
 ## Code standards
 
 - Write at world-class senior frontend developer + UI/UX designer level

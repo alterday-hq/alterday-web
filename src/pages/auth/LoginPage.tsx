@@ -43,7 +43,7 @@ export default function LoginPage() {
     i18n.changeLanguage(i18n.language === 'en' ? 'pl' : 'en');
 
   return (
-    <div className="relative min-h-svh w-full">
+    <div className="relative min-h-svh w-full" style={{ backgroundColor: darkPalette.background }}>
 
       {/* ── GridScan always uses dark palette — looks identical in both themes ── */}
       <div className="absolute inset-0 z-0">

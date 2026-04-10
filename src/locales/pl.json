@@ -2,21 +2,28 @@
   "auth": {
     "login": {
       "title": "Login",
-      "subtitle": "Witaj z powrotem. Wprowadź swoje dane.",
-      "emailLabel": "Email",
-      "emailPlaceholder": "ty@przykład.pl",
-      "passwordLabel": "Hasło",
+      "subtitle": "Wprowadź dane dostępowe, aby rozpocząć proces synchronizacji.",
+      "emailLabel": "Adres Cyfrowy",
+      "emailPlaceholder": "użytkownik@sieć.sys",
+      "passwordLabel": "Klucz Dostępu",
       "passwordPlaceholder": "••••••••",
-      "forgotPassword": "Zapomniałeś hasła?",
-      "submit": "Zaloguj się",
-      "orContinueWith": "lub kontynuuj przez",
-      "noAccount": "Nie masz konta?",
-      "signUp": "Zarejestruj się"
+      "forgotPassword": "Protokół odzyskiwania klucza →",
+      "submit": "Nawiąż Połączenie",
+      "orContinueWith": "alternatywna autoryzacja",
+      "noAccount": "Nie ma cię w systemie?",
+      "signUp": "Inicjalizuj Konto"
+    },
+    "register": {
+      "title": "Rejestracja",
+      "subtitle": "Utwórz swoją tożsamość w systemie.",
+      "submit": "Inicjalizuj Konto",
+      "hasAccount": "Masz już konto w systemie?",
+      "signIn": "Nawiąż Połączenie"
     }
   },
   "common": {
-    "showPassword": "Pokaż hasło",
-    "hidePassword": "Ukryj hasło",
+    "showPassword": "Odkryj klucz dostępu",
+    "hidePassword": "Ukryj klucz dostępu",
     "toggleTheme": "Zmień motyw",
     "switchLanguage": "Zmień język"
   }

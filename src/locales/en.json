@@ -2,21 +2,28 @@
   "auth": {
     "login": {
       "title": "Login",
-      "subtitle": "Welcome back. Enter your credentials.",
-      "emailLabel": "Email",
-      "emailPlaceholder": "you@example.com",
-      "passwordLabel": "Password",
+      "subtitle": "Enter your credentials to begin the synchronization process.",
+      "emailLabel": "Digital Address",
+      "emailPlaceholder": "user@network.sys",
+      "passwordLabel": "Access Key",
       "passwordPlaceholder": "••••••••",
-      "forgotPassword": "Forgot password?",
-      "submit": "Login",
-      "orContinueWith": "or continue with",
-      "noAccount": "Don't have an account?",
-      "signUp": "Sign up"
+      "forgotPassword": "Key recovery protocol →",
+      "submit": "Establish Connection",
+      "orContinueWith": "alternative authentication",
+      "noAccount": "Not registered in the system?",
+      "signUp": "Initialize Account"
+    },
+    "register": {
+      "title": "Register",
+      "subtitle": "Create your identity in the system.",
+      "submit": "Initialize Account",
+      "hasAccount": "Already in the system?",
+      "signIn": "Establish Connection"
     }
   },
   "common": {
-    "showPassword": "Show password",
-    "hidePassword": "Hide password",
+    "showPassword": "Reveal access key",
+    "hidePassword": "Conceal access key",
     "toggleTheme": "Toggle theme",
     "switchLanguage": "Switch language"
   }
