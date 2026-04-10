@@ -1,6 +1,6 @@
 .glitch {
-  color: #fff;
-  /* override via --glitch-size on a parent wrapper */
+  /* override via --glitch-color / --glitch-size on a parent wrapper */
+  color: var(--glitch-color, #fff);
   font-size: var(--glitch-size, clamp(2rem, 10vw, 8rem));
   font-weight: 900;
   position: relative;
@@ -15,7 +15,7 @@
   content: attr(data-text);
   position: absolute;
   top: 0;
-  color: #fff;
+  color: var(--glitch-color, #fff);
   /* override via --glitch-bg on a parent wrapper to match the surface behind the text */
   background-color: var(--glitch-bg, #060010);
   overflow: hidden;

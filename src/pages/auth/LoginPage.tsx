@@ -5,7 +5,7 @@ import { Eye, EyeOff, Mail, Lock, Sun, Moon } from 'lucide-react';
 import { GridScan } from '@/components/GridScan';
 import GlitchText from '@/components/GlitchText';
 import DecryptedText from '@/components/DecryptedText';
-import { darkPalette } from '@/shared/colors';
+import { darkPalette, lightPalette } from '@/shared/colors';
 import logoSrc from '@/assets/logo/logo-base-transparent.svg';
 
 const GitHubIcon = () => (
@@ -28,30 +28,33 @@ export default function LoginPage() {
   const [isDark, setIsDark] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Background is always dark — dark class stays on <html> permanently.
-  // isDark only controls card opacity and accent intensity.
+  const palette = isDark ? darkPalette : lightPalette;
+
+  // Sync dark class to <html> so all CSS vars and body bg resolve correctly
   useEffect(() => {
-    document.documentElement.classList.add('dark');
-    return () => document.documentElement.classList.remove('dark');
-  }, []);
+    const root = document.documentElement;
+    isDark ? root.classList.add('dark') : root.classList.remove('dark');
+    return () => root.classList.remove('dark');
+  }, [isDark]);
 
   const toggleLanguage = () =>
     i18n.changeLanguage(i18n.language === 'en' ? 'pl' : 'en');
 
   return (
-    <div className="relative min-h-svh w-full" style={{ backgroundColor: darkPalette.background }}>
+    // backgroundColor fixes the WebGL canvas alpha:0 bleed-through
+    <div className="relative min-h-svh w-full" style={{ backgroundColor: palette.background }}>
 
-      {/* ── GridScan always uses dark palette — looks identical in both themes ── */}
+      {/* ── Full-screen GridScan — adapts colours to current theme ──────────── */}
       <div className="absolute inset-0 z-0">
         <GridScan
           sensitivity={0.55}
           lineThickness={1}
-          linesColor={darkPalette.surface}
+          linesColor={palette.surface}
           gridScale={0.1}
-          scanColor={darkPalette.accent}
-          scanOpacity={0.4}
+          scanColor={palette.accent}
+          scanOpacity={isDark ? 0.4 : 0.35}
           enablePost
-          bloomIntensity={0.6}
+          bloomIntensity={isDark ? 0.6 : 0.3}
           chromaticAberration={0.002}
           noiseIntensity={0.01}
           style={{ width: '100%', height: '100%' }}
@@ -82,37 +85,32 @@ export default function LoginPage() {
       {/* ── Page content ─────────────────────────────────────────────────────── */}
       <div className="relative z-10 flex min-h-svh flex-col items-center justify-center px-4 py-8">
 
-        {/* GlitchText on the raw grid — solid bg always matches dark background */}
+        {/* GlitchText floats directly on the grid background */}
         <div
           className="mb-4 text-center"
           style={{
-            '--glitch-bg': darkPalette.background,
+            '--glitch-bg': palette.background,
+            '--glitch-color': isDark ? '#ffffff' : '#0F1117',
             '--glitch-size': 'clamp(3.5rem, 8vw, 5.5rem)',
           } as React.CSSProperties}
         >
-          <GlitchText speed={1} enableShadows enableOnHover={false} className="font-mono">
+          <GlitchText
+            speed={1}
+            enableShadows={isDark}
+            enableOnHover={false}
+            className="font-mono"
+          >
             {t('auth.login.title')}
           </GlitchText>
         </div>
 
-        {/*
-          Light mode: card is nearly transparent so the dark grid shows through —
-          dark bg + glass works, dark bg + white card doesn't.
-          Accent is overridden to the muted light-palette colour via a CSS var.
-        */}
-        <div
-          className={[
-            'w-full max-w-[380px] rounded-2xl border backdrop-blur-2xl px-8 py-6 shadow-2xl',
-            isDark
-              ? 'bg-card/75 border-primary/15'
-              : 'bg-card/30 border-primary/25',
-          ].join(' ')}
-          style={isDark ? {} : {
-            '--primary': 'oklch(0.573 0.097 175)',
-            '--primary-foreground': 'oklch(0.108 0.015 264)',
-            '--ring': 'oklch(0.573 0.097 175)',
-          } as React.CSSProperties}
-        >
+        {/* Glass card — stronger shadow + border in light mode so it lifts off the grid */}
+        <div className={[
+          'w-full max-w-[380px] rounded-2xl backdrop-blur-2xl px-8 py-6',
+          isDark
+            ? 'bg-card/80 border border-primary/20 shadow-2xl'
+            : 'bg-card/90 border border-primary/30 shadow-[0_8px_40px_rgba(0,150,125,0.15)]',
+        ].join(' ')}>
 
           <div className="flex justify-center mb-5">
             <img src={logoSrc} alt="Alterday" width={80} height={80} />
@@ -140,7 +138,7 @@ export default function LoginPage() {
                   type="email"
                   placeholder={t('auth.login.emailPlaceholder')}
                   autoComplete="email"
-                  className="w-full bg-background/50 text-foreground placeholder:text-foreground/25 pl-10 pr-4 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-colors"
+                  className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
                 />
               </div>
             </div>
@@ -155,7 +153,7 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   placeholder={t('auth.login.passwordPlaceholder')}
                   autoComplete="current-password"
-                  className="w-full bg-background/50 text-foreground placeholder:text-foreground/25 pl-10 pr-10 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-colors"
+                  className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
                 />
                 <button
                   type="button"
@@ -185,12 +183,12 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="relative my-6">
+          <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-primary/10" />
+              <div className="w-full border-t border-primary/15" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-transparent px-3 text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">
+              <span className="bg-card/80 px-3 text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">
                 <DecryptedText text={t('auth.login.orContinueWith')} animateOn="view" speed={25} />
               </span>
             </div>
@@ -199,21 +197,21 @@ export default function LoginPage() {
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
-              className="flex items-center justify-center gap-2 bg-background/40 hover:bg-background/60 border border-primary/15 hover:border-primary/40 text-foreground text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className="flex items-center justify-center gap-2 bg-background/50 hover:bg-background/80 border border-primary/15 hover:border-primary/40 text-foreground text-sm font-medium py-2.5 rounded-lg transition-colors"
             >
               <GitHubIcon />
               GitHub
             </button>
             <button
               type="button"
-              className="flex items-center justify-center gap-2 bg-background/40 hover:bg-background/60 border border-primary/15 hover:border-primary/40 text-foreground text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className="flex items-center justify-center gap-2 bg-background/50 hover:bg-background/80 border border-primary/15 hover:border-primary/40 text-foreground text-sm font-medium py-2.5 rounded-lg transition-colors"
             >
               <GoogleIcon />
               Google
             </button>
           </div>
 
-          <p className="mt-6 text-center text-xs font-mono text-muted-foreground/50">
+          <p className="mt-6 text-center text-xs font-mono text-muted-foreground/60">
             {t('auth.login.noAccount')}{' '}
             <Link to="/register" className="text-primary/70 hover:text-primary transition-colors">
               {t('auth.login.signUp')}
