@@ -38,6 +38,9 @@ export const foreground = {
   },
 } as const;
 
+/** One-off accent used for the GridScan beam in light mode */
+export const gridScanLightAccent = '#2AAA8A';
+
 /** Utility: destructive / error state (theme-agnostic) */
 export const semantic = {
   destructive: '#E53E3E',
