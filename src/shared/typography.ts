@@ -4,7 +4,12 @@
  */
 
 export const fontFamily = {
+  /** Body copy, UI labels, general text */
   sans: '"Geist Variable", sans-serif',
+  /** Hero headlines, section titles, display text */
+  heading: '"Syne Variable", sans-serif',
+  /** Code blocks, technical labels, data displays */
+  mono: '"Geist Mono", monospace',
 } as const;
 
 export const fontSize = {
