@@ -1,0 +1,23 @@
+{
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Welcome back. Enter your credentials.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "submit": "Login",
+      "orContinueWith": "or continue with",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    }
+  },
+  "common": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "toggleTheme": "Toggle theme",
+    "switchLanguage": "Switch language"
+  }
+}

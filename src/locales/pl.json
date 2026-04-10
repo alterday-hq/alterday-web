@@ -1,0 +1,23 @@
+{
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Witaj z powrotem. Wprowadź swoje dane.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "ty@przykład.pl",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Zapomniałeś hasła?",
+      "submit": "Zaloguj się",
+      "orContinueWith": "lub kontynuuj przez",
+      "noAccount": "Nie masz konta?",
+      "signUp": "Zarejestruj się"
+    }
+  },
+  "common": {
+    "showPassword": "Pokaż hasło",
+    "hidePassword": "Ukryj hasło",
+    "toggleTheme": "Zmień motyw",
+    "switchLanguage": "Zmień język"
+  }
+}
