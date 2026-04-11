@@ -72,7 +72,7 @@ export default function RegisterPage() {
           bloomIntensity={isDark ? 0.6 : 0.3}
           chromaticAberration={0.002}
           noiseIntensity={0.01}
-          style={{ width: "100%", height: "100%" }}
+style={{ width: "100%", height: "100%" }}
         />
       </div>
 
