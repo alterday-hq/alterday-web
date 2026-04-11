@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { useTranslation } from "react-i18next";
-import { Eye, EyeOff, Mail, Lock, User, Sun, Moon } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { motion } from "motion/react";
 import { GridScan } from "@/components/GridScan";
 import GlitchText from "@/components/GlitchText";
@@ -44,7 +45,7 @@ const METRICS = [
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation();
-  const { isDark, toggle: toggleTheme } = useThemeStore();
+  const isDark = useThemeStore((s) => s.isDark);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -87,14 +88,10 @@ style={{ width: "100%", height: "100%" }}
           {i18n.language === "en" ? "EN" : "PL"}
         </button>
 
-        <button
-          type="button"
-          onClick={toggleTheme}
-          className="flex items-center justify-center size-9 rounded-full bg-card/60 backdrop-blur-md border border-primary/20 text-foreground hover:border-primary/50 hover:text-primary transition-colors"
+        <AnimatedThemeToggler
+          className="flex items-center justify-center size-9 rounded-full bg-card/60 backdrop-blur-md border border-primary/20 text-foreground hover:border-primary/50 hover:text-primary transition-colors [&_svg]:size-4"
           aria-label={t("common.toggleTheme")}
-        >
-          {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
-        </button>
+        />
       </div>
 
       {/* ── Page content ─────────────────────────────────────────────────────── */}
