@@ -6,8 +6,8 @@ import { GridScan } from "@/components/GridScan";
 import GlitchText from "@/components/GlitchText";
 import DecryptedText from "@/components/DecryptedText";
 import { darkPalette, lightPalette, gridScanLightAccent } from "@/shared/colors";
-import logoDark from "@/assets/logo/logo-base-transparent-dark-theme.svg";
-import logoLight from "@/assets/logo/logo-base-transparent-light-theme.svg";
+import logoDark from "@/assets/logo/logo-day-text-dark.svg";
+import logoLight from "@/assets/logo/logo-day-text-light.svg";
 import { useThemeStore } from "@/stores/useThemeStore";
 
 const GitHubIcon = () => (
@@ -139,8 +139,8 @@ export default function LoginPage() {
             <img
               src={isDark ? logoDark : logoLight}
               alt="Alterday"
-              width={80}
-              height={80}
+              width={180}
+              height={48}
             />
           </div>
 

@@ -8,8 +8,8 @@ import { GridScan } from "@/components/GridScan";
 import GlitchText from "@/components/GlitchText";
 import DecryptedText from "@/components/DecryptedText";
 import { darkPalette, lightPalette, gridScanLightAccent } from "@/shared/colors";
-import logoDark from "@/assets/logo/logo-base-transparent-dark-theme.svg";
-import logoLight from "@/assets/logo/logo-base-transparent-light-theme.svg";
+import logoDark from "@/assets/logo/logo-day-text-dark.svg";
+import logoLight from "@/assets/logo/logo-day-text-light.svg";
 
 const GitHubIcon = () => (
   <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
@@ -235,7 +235,7 @@ style={{ width: "100%", height: "100%" }}
             ].join(" ")}
           >
             <div className="flex justify-center mb-3">
-              <img src={isDark ? logoDark : logoLight} alt="Alterday" width={60} height={60} />
+              <img src={isDark ? logoDark : logoLight} alt="Alterday" width={160} height={42} />
             </div>
 
             <p className="font-mono text-sm text-muted-foreground mb-4 text-center">
