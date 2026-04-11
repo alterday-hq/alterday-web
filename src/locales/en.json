@@ -1,0 +1,44 @@
+{
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Enter your credentials to begin the synchronization process.",
+      "emailLabel": "Digital Address",
+      "emailPlaceholder": "user@network.sys",
+      "passwordLabel": "Access Key",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Key recovery protocol →",
+      "submit": "Establish Connection",
+      "orContinueWith": "alternative authentication",
+      "noAccount": "Not registered in the system?",
+      "signUp": "Initialize Account"
+    },
+    "register": {
+      "title": "Register",
+      "headline1": "Quantify",
+      "headline2": "every",
+      "headline3": "alternate",
+      "headline4": "possibility.",
+      "subtitle": "Start your simulation. Create your identity in the system.",
+      "subjectLabel": "Subject Name",
+      "subjectPlaceholder": "subject_name",
+      "emailLabel": "Digital Address",
+      "emailPlaceholder": "user@network.sys",
+      "passwordLabel": "Access Key",
+      "passwordPlaceholder": "••••••••",
+      "confirmLabel": "Verify Access Key",
+      "confirmPlaceholder": "••••••••",
+      "submit": "Initialize Account",
+      "orContinueWith": "alternative authentication",
+      "hasAccount": "Already in the system?",
+      "signIn": "Establish Connection",
+      "statsJoined": "identities initialized"
+    }
+  },
+  "common": {
+    "showPassword": "Reveal access key",
+    "hidePassword": "Conceal access key",
+    "toggleTheme": "Toggle theme",
+    "switchLanguage": "Switch language"
+  }
+}

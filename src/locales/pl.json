@@ -1,0 +1,44 @@
+{
+  "auth": {
+    "login": {
+      "title": "Logowanie",
+      "subtitle": "Wprowadź dane dostępowe, aby rozpocząć proces synchronizacji.",
+      "emailLabel": "Adres Cyfrowy",
+      "emailPlaceholder": "użytkownik@sieć.sys",
+      "passwordLabel": "Klucz Dostępu",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Protokół odzyskiwania klucza →",
+      "submit": "Nawiąż Połączenie",
+      "orContinueWith": "alternatywna autoryzacja",
+      "noAccount": "Nie ma cię w systemie?",
+      "signUp": "Inicjalizuj Konto"
+    },
+    "register": {
+      "title": "Rejestracja",
+      "headline1": "Kwantyfikuj",
+      "headline2": "każdą",
+      "headline3": "alternatywną",
+      "headline4": "możliwość.",
+      "subtitle": "Rozpocznij symulację. Utwórz swoją tożsamość w systemie.",
+      "subjectLabel": "Nazwa Podmiotu",
+      "subjectPlaceholder": "nazwa_podmiotu",
+      "emailLabel": "Adres Cyfrowy",
+      "emailPlaceholder": "użytkownik@sieć.sys",
+      "passwordLabel": "Klucz Dostępu",
+      "passwordPlaceholder": "••••••••",
+      "confirmLabel": "Zweryfikuj Klucz Dostępu",
+      "confirmPlaceholder": "••••••••",
+      "submit": "Inicjalizuj Konto",
+      "orContinueWith": "alternatywna autoryzacja",
+      "hasAccount": "Masz już konto w systemie?",
+      "signIn": "Nawiąż Połączenie",
+      "statsJoined": "tożsamości zainicjalizowanych"
+    }
+  },
+  "common": {
+    "showPassword": "Odkryj klucz dostępu",
+    "hidePassword": "Ukryj klucz dostępu",
+    "toggleTheme": "Zmień motyw",
+    "switchLanguage": "Zmień język"
+  }
+}
