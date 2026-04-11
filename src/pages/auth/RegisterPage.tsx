@@ -193,7 +193,7 @@ export default function RegisterPage() {
               <span className="text-sm font-bold" style={{ color: accentColor }}>
                 12,847+
               </span>{" "}
-              <span className="text-xs text-muted-foreground/70">
+              <span className="text-xs text-muted-foreground">
                 <DecryptedText
                   key={i18n.language + "stats"}
                   text={t("auth.register.statsJoined")}
