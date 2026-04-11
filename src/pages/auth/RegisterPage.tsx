@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useThemeStore } from "@/stores/useThemeStore";
 import { useTranslation } from "react-i18next";
 import { Eye, EyeOff, Mail, Lock, User, Sun, Moon } from "lucide-react";
 import { motion } from "motion/react";
@@ -43,19 +44,12 @@ const METRICS = [
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation();
-  const [isDark, setIsDark] = useState(true);
+  const { isDark, toggle: toggleTheme } = useThemeStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const palette = isDark ? darkPalette : lightPalette;
   const accentColor = isDark ? palette.accent : lightPalette.accent;
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) root.classList.add("dark");
-    else root.classList.remove("dark");
-    return () => root.classList.remove("dark");
-  }, [isDark]);
 
   const toggleLanguage = () =>
     i18n.changeLanguage(i18n.language === "en" ? "pl" : "en");
@@ -95,7 +89,7 @@ export default function RegisterPage() {
 
         <button
           type="button"
-          onClick={() => setIsDark((v) => !v)}
+          onClick={toggleTheme}
           className="flex items-center justify-center size-9 rounded-full bg-card/60 backdrop-blur-md border border-primary/20 text-foreground hover:border-primary/50 hover:text-primary transition-colors"
           aria-label={t("common.toggleTheme")}
         >

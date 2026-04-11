@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Eye, EyeOff, Mail, Lock, Sun, Moon } from "lucide-react";
@@ -8,6 +8,7 @@ import DecryptedText from "@/components/DecryptedText";
 import { darkPalette, lightPalette, gridScanLightAccent } from "@/shared/colors";
 import logoDark from "@/assets/logo/logo-base-transparent-dark-theme.svg";
 import logoLight from "@/assets/logo/logo-base-transparent-light-theme.svg";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 const GitHubIcon = () => (
   <svg
@@ -50,18 +51,10 @@ const GoogleIcon = () => (
 
 export default function LoginPage() {
   const { t, i18n } = useTranslation();
-  const [isDark, setIsDark] = useState(true);
+  const { isDark, toggle: toggleTheme } = useThemeStore();
   const [showPassword, setShowPassword] = useState(false);
 
   const palette = isDark ? darkPalette : lightPalette;
-
-  // Sync dark class to <html> so all CSS vars and body bg resolve correctly
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) root.classList.add("dark");
-    else root.classList.remove("dark");
-    return () => root.classList.remove("dark");
-  }, [isDark]);
 
   const toggleLanguage = () =>
     i18n.changeLanguage(i18n.language === "en" ? "pl" : "en");
@@ -102,7 +95,7 @@ export default function LoginPage() {
 
         <button
           type="button"
-          onClick={() => setIsDark((v) => !v)}
+          onClick={toggleTheme}
           className="flex items-center justify-center size-9 rounded-full bg-card/60 backdrop-blur-md border border-primary/20 text-foreground hover:border-primary/50 hover:text-primary transition-colors"
           aria-label={t("common.toggleTheme")}
         >
