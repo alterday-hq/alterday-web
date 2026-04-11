@@ -116,6 +116,7 @@ Subtitles and descriptions should feel like terminal output:
 - No redundant comments — comment only when logic is non-obvious, or to explain what a strange/non-intuitive file is doing
 - Do not hardcode colors — always import from `src/shared/colors.ts`
 - After every response, suggest a git commit message
+- **Architectural consistency is non-negotiable** — never solve the same class of problem with two different mechanisms in the same codebase without an explicit, defensible reason. If theme persistence uses Zustand, language persistence uses Zustand. If one uses raw `localStorage`, both do. Mixed approaches without justification are a failure, not a trade-off.
 
 ## Conventions
 
