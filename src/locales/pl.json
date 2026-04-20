@@ -32,7 +32,8 @@
       "orContinueWith": "alternatywna autoryzacja",
       "hasAccount": "Masz już konto w systemie?",
       "signIn": "Nawiąż Połączenie",
-      "statsJoined": "tożsamości zainicjalizowanych"
+      "statsJoined": "tożsamości zainicjalizowanych",
+      "passwordMismatch": "Klucze dostępu nie są zgodne."
     }
   },
   "common": {

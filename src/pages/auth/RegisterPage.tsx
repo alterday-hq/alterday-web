@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { motion } from "motion/react";
@@ -48,12 +49,36 @@ export default function RegisterPage() {
   const isDark = useThemeStore((s) => s.isDark);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
+  const subjectRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmRef = useRef<HTMLInputElement>(null);
+
+  const { signUp, isLoading, error, clearError } = useAuthStore();
 
   const palette = isDark ? darkPalette : lightPalette;
   const accentColor = isDark ? palette.accent : lightPalette.accent;
 
   const toggleLanguage = () =>
     i18n.changeLanguage(i18n.language === "en" ? "pl" : "en");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocalError(null);
+    const subject = subjectRef.current?.value.trim() ?? "";
+    const email = emailRef.current?.value.trim() ?? "";
+    const password = passwordRef.current?.value ?? "";
+    const confirm = confirmRef.current?.value ?? "";
+    if (!subject || !email || !password) return;
+    if (password !== confirm) {
+      setLocalError(t("auth.register.passwordMismatch"));
+      return;
+    }
+    await signUp(email, password, subject);
+  };
+
+  const displayError = localError ?? error;
 
   return (
     <div
@@ -246,7 +271,7 @@ style={{ width: "100%", height: "100%" }}
               />
             </p>
 
-            <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-3" onSubmit={handleSubmit}>
               {/* Subject Name */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -261,9 +286,11 @@ style={{ width: "100%", height: "100%" }}
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
                   <input
+                    ref={subjectRef}
                     type="text"
                     placeholder={t("auth.register.subjectPlaceholder")}
                     autoComplete="username"
+                    onChange={() => { clearError(); setLocalError(null); }}
                     className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
                   />
                 </div>
@@ -283,9 +310,11 @@ style={{ width: "100%", height: "100%" }}
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
                   <input
+                    ref={emailRef}
                     type="email"
                     placeholder={t("auth.register.emailPlaceholder")}
                     autoComplete="email"
+                    onChange={() => { clearError(); setLocalError(null); }}
                     className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
                   />
                 </div>
@@ -305,9 +334,11 @@ style={{ width: "100%", height: "100%" }}
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
                   <input
+                    ref={passwordRef}
                     type={showPassword ? "text" : "password"}
                     placeholder={t("auth.register.passwordPlaceholder")}
                     autoComplete="new-password"
+                    onChange={() => { clearError(); setLocalError(null); }}
                     className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
                   />
                   <button
@@ -335,9 +366,11 @@ style={{ width: "100%", height: "100%" }}
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
                   <input
+                    ref={confirmRef}
                     type={showConfirm ? "text" : "password"}
                     placeholder={t("auth.register.confirmPlaceholder")}
                     autoComplete="new-password"
+                    onChange={() => { clearError(); setLocalError(null); }}
                     className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
                   />
                   <button
@@ -353,10 +386,22 @@ style={{ width: "100%", height: "100%" }}
 
               <button
                 type="submit"
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2.5 rounded-lg text-sm transition-colors mt-1"
+                disabled={isLoading}
+                className="w-full bg-primary hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed text-primary-foreground font-semibold py-2.5 rounded-lg text-sm transition-colors mt-1 flex items-center justify-center gap-2"
               >
-                {t("auth.register.submit")}
+                {isLoading ? (
+                  <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                ) : t("auth.register.submit")}
               </button>
+
+              {displayError && (
+                <div className="mt-1 px-4 py-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-xs font-mono text-center">
+                  {displayError}
+                </div>
+              )}
             </form>
 
             {/* OAuth divider */}

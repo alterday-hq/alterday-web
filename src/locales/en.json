@@ -32,7 +32,8 @@
       "orContinueWith": "alternative authentication",
       "hasAccount": "Already in the system?",
       "signIn": "Establish Connection",
-      "statsJoined": "identities initialized"
+      "statsJoined": "identities initialized",
+      "passwordMismatch": "Access keys do not match."
     }
   },
   "common": {

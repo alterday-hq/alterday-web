@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { GridScan } from "@/components/GridScan";
 import GlitchText from "@/components/GlitchText";
@@ -54,11 +55,23 @@ export default function LoginPage() {
   const { t, i18n } = useTranslation();
   const isDark = useThemeStore((s) => s.isDark);
   const [showPassword, setShowPassword] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const { signIn, isLoading, error, clearError } = useAuthStore();
 
   const palette = isDark ? darkPalette : lightPalette;
 
   const toggleLanguage = () =>
     i18n.changeLanguage(i18n.language === "en" ? "pl" : "en");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = emailRef.current?.value.trim() ?? "";
+    const password = passwordRef.current?.value ?? "";
+    if (!email || !password) return;
+    await signIn(email, password);
+  };
 
   return (
     // backgroundColor fixes the WebGL canvas alpha:0 bleed-through
@@ -152,7 +165,7 @@ export default function LoginPage() {
             />
           </p>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 <DecryptedText
@@ -166,9 +179,11 @@ export default function LoginPage() {
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
                 <input
+                  ref={emailRef}
                   type="email"
                   placeholder={t("auth.login.emailPlaceholder")}
                   autoComplete="email"
+                  onChange={clearError}
                   className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
                 />
               </div>
@@ -187,9 +202,11 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
                 <input
+                  ref={passwordRef}
                   type={showPassword ? "text" : "password"}
                   placeholder={t("auth.login.passwordPlaceholder")}
                   autoComplete="current-password"
+                  onChange={clearError}
                   className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
                 />
                 <button
@@ -222,10 +239,22 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2.5 rounded-lg text-sm transition-colors"
+              disabled={isLoading}
+              className="w-full bg-primary hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed text-primary-foreground font-semibold py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
             >
-              {t("auth.login.submit")}
+              {isLoading ? (
+                <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                </svg>
+              ) : t("auth.login.submit")}
             </button>
+
+            {error && (
+              <div className="mt-3 px-4 py-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-xs font-mono text-center">
+                {error}
+              </div>
+            )}
           </form>
 
           <div className="relative my-5">
