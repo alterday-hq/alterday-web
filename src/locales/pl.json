@@ -33,13 +33,31 @@
       "hasAccount": "Masz już konto w systemie?",
       "signIn": "Nawiąż Połączenie",
       "statsJoined": "tożsamości zainicjalizowanych",
-      "passwordMismatch": "Klucze dostępu nie są zgodne."
+      "passwordMismatch": "Klucze dostępu nie są zgodne.",
+      "emailSentTitle": "TOŻSAMOŚĆ OCZEKUJE",
+      "emailSentBody": "Link potwierdzający wysłano na twój adres cyfrowy. Sprawdź skrzynkę aby aktywować konto.",
+      "emailSentAction": "Wróć do połączenia →"
     }
+  },
+  "errors": {
+    "ACCESS_DENIED": "ODMOWA_DOSTĘPU",
+    "IDENTITY_UNVERIFIED": "TOŻSAMOŚĆ_NIEZWERYFIKOWANA",
+    "IDENTITY_EXISTS": "TOŻSAMOŚĆ_ZAJĘTA",
+    "KEY_INSUFFICIENT": "KLUCZ_ZBYT_SŁABY",
+    "KEY_MISMATCH": "KLUCZ_NIEZGODNY",
+    "INVALID_ADDRESS": "ADRES_NIEPRAWIDŁOWY",
+    "RATE_LIMIT_EXCEEDED": "PRZEKROCZONO_LIMIT",
+    "SYSTEM_FAULT": "BŁĄD_SYSTEMU"
   },
   "common": {
     "showPassword": "Odkryj klucz dostępu",
     "hidePassword": "Ukryj klucz dostępu",
     "toggleTheme": "Zmień motyw",
-    "switchLanguage": "Zmień język"
+    "switchLanguage": "Zmień język",
+    "invalidFormat": "BŁĘDNY FORMAT",
+    "weakPassword": "MIN 8 / A-Z / 0-9",
+    "keyMismatch": "KLUCZE NIEZGODNE",
+    "invalidSubject": "3-30 / A-Z / _",
+    "passwordHint": "min 8 znaków · 1 wielka · 1 cyfra"
   }
 }

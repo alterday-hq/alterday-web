@@ -8,8 +8,8 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   initialize: () => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, displayName: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<{ success: boolean }>;
+  signUp: (email: string, password: string, displayName: string) => Promise<{ success: boolean }>;
   signOut: () => Promise<void>;
   clearError: () => void;
 }
@@ -32,7 +32,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   signIn: async (email, password) => {
     set({ isLoading: true, error: null });
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    set({ isLoading: false, error: error?.message ?? null });
+    const errorStr = error ? [error.code, error.message].filter(Boolean).join(' ') : null;
+    set({ isLoading: false, error: errorStr });
+    return { success: !error };
   },
 
   signUp: async (email, password, displayName) => {
@@ -42,7 +44,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       password,
       options: { data: { display_name: displayName } },
     });
-    set({ isLoading: false, error: error?.message ?? null });
+    const errorStr = error ? [error.code, error.message].filter(Boolean).join(' ') : null;
+    set({ isLoading: false, error: errorStr });
+    return { success: !error };
   },
 
   signOut: async () => {

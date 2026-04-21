@@ -2,14 +2,15 @@ import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { useTranslation } from "react-i18next";
+import { AnimatePresence, motion, useAnimate } from "motion/react";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { AuthSubmitButton } from "@/components/ui/AuthSubmitButton";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-import { motion } from "motion/react";
-import { GridScan } from "@/components/GridScan";
 import GlitchText from "@/components/GlitchText";
 import DecryptedText from "@/components/DecryptedText";
-import { darkPalette, lightPalette, gridScanLightAccent } from "@/shared/colors";
+import { darkPalette, lightPalette } from "@/shared/colors";
 import logoDark from "@/assets/logo/logo-day-text-dark.svg";
 import logoLight from "@/assets/logo/logo-day-text-light.svg";
 
@@ -49,13 +50,43 @@ export default function RegisterPage() {
   const isDark = useThemeStore((s) => s.isDark);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [localError, setLocalError] = useState<string | null>(null);
+  const [invalid, setInvalid] = useState<Set<string>>(new Set());
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [errorKey, setErrorKey] = useState(0);
+  const [subjectVal, setSubjectVal] = useState('');
+  const [subjectTouched, setSubjectTouched] = useState(false);
+  const [passwordVal, setPasswordVal] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
   const subjectRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLInputElement>(null);
+  const [subjectScope, animateSubject] = useAnimate();
+  const [emailScope, animateEmail] = useAnimate();
+  const [passwordScope, animatePassword] = useAnimate();
+  const [confirmScope, animateConfirm] = useAnimate();
 
   const { signUp, isLoading, error, clearError } = useAuthStore();
+
+  const shakeField = (animate: ReturnType<typeof useAnimate>[1], ref: ReturnType<typeof useAnimate>[0]) => {
+    animate(ref.current, { x: [0, -8, 8, -5, 5, 0] }, { duration: 0.4 });
+  };
+
+  const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const isStrongPassword = (v: string) => v.length >= 8 && /[A-Z]/.test(v) && /[0-9]/.test(v);
+  const isValidSubject = (v: string) => /^[a-zA-Z0-9_]{3,30}$/.test(v);
+
+  const clearField = (name: string) => {
+    clearError();
+    setInvalid(s => { const n = new Set(s); n.delete(name); return n; });
+    setFieldErrors(f => { const n = {...f}; delete n[name]; return n; });
+  };
+
+  const passwordMeetsLength = passwordVal.length >= 8;
+  const passwordMeetsUpper = /[A-Z]/.test(passwordVal);
+  const passwordMeetsDigit = /[0-9]/.test(passwordVal);
+  const subjectMeetsLength = subjectVal.length >= 3 && subjectVal.length <= 30;
+  const subjectMeetsChars = /^[a-zA-Z0-9_]*$/.test(subjectVal);
 
   const palette = isDark ? darkPalette : lightPalette;
   const accentColor = isDark ? palette.accent : lightPalette.accent;
@@ -65,42 +96,33 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLocalError(null);
     const subject = subjectRef.current?.value.trim() ?? "";
     const email = emailRef.current?.value.trim() ?? "";
     const password = passwordRef.current?.value ?? "";
     const confirm = confirmRef.current?.value ?? "";
-    if (!subject || !email || !password) return;
-    if (password !== confirm) {
-      setLocalError(t("auth.register.passwordMismatch"));
-      return;
-    }
+
+    const newInvalid = new Set<string>();
+    const newFieldErrors: Record<string, string> = {};
+
+    if (!subject) { newInvalid.add("subject"); shakeField(animateSubject, subjectScope); }
+    else if (!isValidSubject(subject)) { newInvalid.add("subject"); newFieldErrors.subject = "common.invalidSubject"; setSubjectTouched(true); shakeField(animateSubject, subjectScope); }
+    if (!email) { newInvalid.add("email"); shakeField(animateEmail, emailScope); }
+    else if (!isValidEmail(email)) { newInvalid.add("email"); newFieldErrors.email = "common.invalidFormat"; shakeField(animateEmail, emailScope); }
+    if (!password) { newInvalid.add("password"); shakeField(animatePassword, passwordScope); }
+    else if (!isStrongPassword(password)) { newInvalid.add("password"); newFieldErrors.password = "common.weakPassword"; setPasswordTouched(true); shakeField(animatePassword, passwordScope); }
+    if (!confirm) { newInvalid.add("confirm"); shakeField(animateConfirm, confirmScope); }
+    else if (password && confirm && password !== confirm) { newInvalid.add("confirm"); shakeField(animateConfirm, confirmScope); }
+
+    setInvalid(newInvalid);
+    setFieldErrors(newFieldErrors);
+    if (newInvalid.size > 0) return;
+
+    setErrorKey(k => k + 1);
     await signUp(email, password, subject);
   };
 
-  const displayError = localError ?? error;
-
   return (
-    <div
-      className="relative min-h-svh w-full"
-      style={{ backgroundColor: palette.background }}
-    >
-      {/* ── Full-screen GridScan ─────────────────────────────────────────────── */}
-      <div className="absolute inset-0 z-0">
-        <GridScan
-          sensitivity={0.55}
-          lineThickness={1}
-          linesColor={palette.surface}
-          gridScale={0.1}
-          scanColor={isDark ? palette.accent : gridScanLightAccent}
-          scanOpacity={isDark ? 0.4 : 0.35}
-          enablePost
-          bloomIntensity={isDark ? 0.6 : 0.3}
-          chromaticAberration={0.002}
-          noiseIntensity={0.01}
-style={{ width: "100%", height: "100%" }}
-        />
-      </div>
+    <div className="relative min-h-svh w-full">
 
       {/* ── Top-right controls ───────────────────────────────────────────────── */}
       <div className="fixed top-5 right-5 z-20 flex items-center gap-2">
@@ -260,7 +282,7 @@ style={{ width: "100%", height: "100%" }}
               <img src={isDark ? logoDark : logoLight} alt="Alterday" width={160} height={42} />
             </div>
 
-            <p className="font-mono text-sm text-muted-foreground mb-4 text-center">
+            <p className="font-mono text-sm text-muted-foreground mb-4 text-center text-balance">
               <DecryptedText
                 key={i18n.language + "subtitle"}
                 text={t("auth.register.subtitle")}
@@ -271,10 +293,10 @@ style={{ width: "100%", height: "100%" }}
               />
             </p>
 
-            <form className="space-y-3" onSubmit={handleSubmit}>
+            <form className="space-y-3" onSubmit={handleSubmit} noValidate>
               {/* Subject Name */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <div ref={subjectScope} className="space-y-1.5">
+                <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   <DecryptedText
                     key={i18n.language + "subject"}
                     text={t("auth.register.subjectLabel")}
@@ -282,6 +304,14 @@ style={{ width: "100%", height: "100%" }}
                     speed={40}
                     sequential
                   />
+                  <AnimatePresence>
+                    {subjectTouched && !(subjectMeetsLength && subjectMeetsChars) && (
+                      <motion.span key="subj-chips" initial={{ opacity: 0, x: 4 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="flex gap-2 font-mono text-[10px] tracking-wider">
+                        <span className={subjectMeetsLength ? "text-primary/50" : "text-destructive/80"}>{subjectMeetsLength ? "✓" : "✗"} 3-30</span>
+                        <span className={subjectMeetsChars ? "text-primary/50" : "text-destructive/80"}>{subjectMeetsChars ? "✓" : "✗"} A-z 0-9 _</span>
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
@@ -290,15 +320,15 @@ style={{ width: "100%", height: "100%" }}
                     type="text"
                     placeholder={t("auth.register.subjectPlaceholder")}
                     autoComplete="username"
-                    onChange={() => { clearError(); setLocalError(null); }}
-                    className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
+                    onChange={(e) => { clearField("subject"); setSubjectVal(e.target.value.trim()); }}
+                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("subject") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                   />
                 </div>
               </div>
 
               {/* Digital Address */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <div ref={emailScope} className="space-y-1.5">
+                <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   <DecryptedText
                     key={i18n.language + "email"}
                     text={t("auth.register.emailLabel")}
@@ -306,6 +336,13 @@ style={{ width: "100%", height: "100%" }}
                     speed={40}
                     sequential
                   />
+                  <AnimatePresence>
+                    {fieldErrors.email && (
+                      <motion.span key="email-err" initial={{ opacity: 0, x: 4 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="text-destructive/80 font-mono text-[10px] tracking-wider">
+                        [{t(fieldErrors.email)}]
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
@@ -314,15 +351,15 @@ style={{ width: "100%", height: "100%" }}
                     type="email"
                     placeholder={t("auth.register.emailPlaceholder")}
                     autoComplete="email"
-                    onChange={() => { clearError(); setLocalError(null); }}
-                    className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
+                    onChange={() => clearField("email")}
+                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("email") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                   />
                 </div>
               </div>
 
               {/* Access Key */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <div ref={passwordScope} className="space-y-1.5">
+                <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   <DecryptedText
                     key={i18n.language + "password"}
                     text={t("auth.register.passwordLabel")}
@@ -330,6 +367,15 @@ style={{ width: "100%", height: "100%" }}
                     speed={40}
                     sequential
                   />
+                  <AnimatePresence>
+                    {passwordTouched && !(passwordMeetsLength && passwordMeetsUpper && passwordMeetsDigit) && (
+                      <motion.span key="pw-chips" initial={{ opacity: 0, x: 4 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="flex gap-2 font-mono text-[10px] tracking-wider">
+                        <span className={passwordMeetsLength ? "text-primary/50" : "text-destructive/80"}>{passwordMeetsLength ? "✓" : "✗"} 8</span>
+                        <span className={passwordMeetsUpper ? "text-primary/50" : "text-destructive/80"}>{passwordMeetsUpper ? "✓" : "✗"} A-Z</span>
+                        <span className={passwordMeetsDigit ? "text-primary/50" : "text-destructive/80"}>{passwordMeetsDigit ? "✓" : "✗"} 0-9</span>
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
@@ -338,8 +384,8 @@ style={{ width: "100%", height: "100%" }}
                     type={showPassword ? "text" : "password"}
                     placeholder={t("auth.register.passwordPlaceholder")}
                     autoComplete="new-password"
-                    onChange={() => { clearError(); setLocalError(null); }}
-                    className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
+                    onChange={(e) => { clearField("password"); setPasswordVal(e.target.value); }}
+                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("password") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                   />
                   <button
                     type="button"
@@ -353,8 +399,8 @@ style={{ width: "100%", height: "100%" }}
               </div>
 
               {/* Verify Access Key */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <div ref={confirmScope} className="space-y-1.5">
+                <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   <DecryptedText
                     key={i18n.language + "confirm"}
                     text={t("auth.register.confirmLabel")}
@@ -370,8 +416,8 @@ style={{ width: "100%", height: "100%" }}
                     type={showConfirm ? "text" : "password"}
                     placeholder={t("auth.register.confirmPlaceholder")}
                     autoComplete="new-password"
-                    onChange={() => { clearError(); setLocalError(null); }}
-                    className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
+                    onChange={() => clearField("confirm")}
+                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("confirm") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                   />
                   <button
                     type="button"
@@ -384,24 +430,9 @@ style={{ width: "100%", height: "100%" }}
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-primary hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed text-primary-foreground font-semibold py-2.5 rounded-lg text-sm transition-colors mt-1 flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                  </svg>
-                ) : t("auth.register.submit")}
-              </button>
-
-              {displayError && (
-                <div className="mt-1 px-4 py-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-xs font-mono text-center">
-                  {displayError}
-                </div>
-              )}
+              <AuthSubmitButton isLoading={isLoading} error={error} errorKey={errorKey}>
+                {t("auth.register.submit")}
+              </AuthSubmitButton>
             </form>
 
             {/* OAuth divider */}

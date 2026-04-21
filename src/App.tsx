@@ -4,6 +4,8 @@ import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
 import { useThemeStore, applyTheme } from '@/stores/useThemeStore';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { GridScan } from '@/components/GridScan';
+import { darkPalette, lightPalette, gridScanLightAccent } from '@/shared/colors';
 
 function HomePlaceholder() {
   const signOut = useAuthStore((s) => s.signOut);
@@ -34,6 +36,7 @@ function GuestRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const isDark = useThemeStore((s) => s.isDark);
+  const palette = isDark ? darkPalette : lightPalette;
 
   useEffect(() => {
     applyTheme(isDark);
@@ -41,19 +44,41 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
-        <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <HomePlaceholder />
-            </ProtectedRoute>
-          }
+      {/* Persistent background — one WebGL context shared across all pages */}
+      <div
+        className="fixed inset-0 z-0"
+        style={{ backgroundColor: palette.background }}
+      >
+        <GridScan
+          sensitivity={0.55}
+          lineThickness={1}
+          linesColor={palette.surface}
+          gridScale={0.1}
+          scanColor={isDark ? palette.accent : gridScanLightAccent}
+          scanOpacity={isDark ? 0.4 : 0.35}
+          enablePost
+          bloomIntensity={isDark ? 0.6 : 0.3}
+          chromaticAberration={0.002}
+          noiseIntensity={0.01}
+          style={{ width: '100%', height: '100%' }}
         />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+      </div>
+
+      <div className="relative z-10">
+        <Routes>
+          <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
+          <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <HomePlaceholder />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

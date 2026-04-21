@@ -33,13 +33,31 @@
       "hasAccount": "Already in the system?",
       "signIn": "Establish Connection",
       "statsJoined": "identities initialized",
-      "passwordMismatch": "Access keys do not match."
+      "passwordMismatch": "Access keys do not match.",
+      "emailSentTitle": "IDENTITY PENDING",
+      "emailSentBody": "Confirmation link dispatched to your digital address. Check your inbox to activate your account.",
+      "emailSentAction": "Return to connection →"
     }
+  },
+  "errors": {
+    "ACCESS_DENIED": "ACCESS_DENIED",
+    "IDENTITY_UNVERIFIED": "IDENTITY_UNVERIFIED",
+    "IDENTITY_EXISTS": "IDENTITY_EXISTS",
+    "KEY_INSUFFICIENT": "KEY_INSUFFICIENT",
+    "KEY_MISMATCH": "KEY_MISMATCH",
+    "INVALID_ADDRESS": "INVALID_ADDRESS",
+    "RATE_LIMIT_EXCEEDED": "RATE_LIMIT_EXCEEDED",
+    "SYSTEM_FAULT": "SYSTEM_FAULT"
   },
   "common": {
     "showPassword": "Reveal access key",
     "hidePassword": "Conceal access key",
     "toggleTheme": "Toggle theme",
-    "switchLanguage": "Switch language"
+    "switchLanguage": "Switch language",
+    "invalidFormat": "INVALID FORMAT",
+    "weakPassword": "MIN 8 / A-Z / 0-9",
+    "keyMismatch": "KEY MISMATCH",
+    "invalidSubject": "3-30 / A-Z / _",
+    "passwordHint": "min 8 chars · 1 uppercase · 1 digit"
   }
 }
