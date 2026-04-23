@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion, useAnimate } from "motion/react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { AuthSubmitButton } from "@/components/ui/AuthSubmitButton";
+import { AuthSubmitButton } from "@/components/ui/button";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import GlitchText from "@/components/GlitchText";
