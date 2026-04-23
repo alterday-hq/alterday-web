@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { AnimatePresence, motion, useAnimate } from "motion/react";
+import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { AuthSubmitButton } from "@/components/ui/AuthSubmitButton";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-import { GridScan } from "@/components/GridScan";
 import GlitchText from "@/components/GlitchText";
 import DecryptedText from "@/components/DecryptedText";
-import { darkPalette, lightPalette, gridScanLightAccent } from "@/shared/colors";
+import { darkPalette, lightPalette } from "@/shared/colors";
 import logoDark from "@/assets/logo/logo-day-text-dark.svg";
 import logoLight from "@/assets/logo/logo-day-text-light.svg";
 import { useThemeStore } from "@/stores/useThemeStore";
@@ -54,35 +57,49 @@ export default function LoginPage() {
   const { t, i18n } = useTranslation();
   const isDark = useThemeStore((s) => s.isDark);
   const [showPassword, setShowPassword] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const [invalid, setInvalid] = useState<Set<string>>(new Set());
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [errorKey, setErrorKey] = useState(0);
+  const [emailScope, animateEmail] = useAnimate();
+  const [passwordScope, animatePassword] = useAnimate();
+
+  const { signIn, isLoading, error, clearError } = useAuthStore();
+
+  const shakeField = (animate: ReturnType<typeof useAnimate>[1], ref: ReturnType<typeof useAnimate>[0]) => {
+    animate(ref.current, { x: [0, -8, 8, -5, 5, 0] }, { duration: 0.4 });
+  };
 
   const palette = isDark ? darkPalette : lightPalette;
 
   const toggleLanguage = () =>
     i18n.changeLanguage(i18n.language === "en" ? "pl" : "en");
 
-  return (
-    // backgroundColor fixes the WebGL canvas alpha:0 bleed-through
-    <div
-      className="relative min-h-svh w-full"
-      style={{ backgroundColor: palette.background }}
-    >
-      {/* ── Full-screen GridScan — adapts colours to current theme ──────────── */}
-      <div className="absolute inset-0 z-0">
-        <GridScan
-          sensitivity={0.55}
-          lineThickness={1}
-          linesColor={palette.surface}
-          gridScale={0.1}
-          scanColor={isDark ? palette.accent : gridScanLightAccent}
-          scanOpacity={isDark ? 0.4 : 0.35}
-          enablePost
-          bloomIntensity={isDark ? 0.6 : 0.3}
-          chromaticAberration={0.002}
-          noiseIntensity={0.01}
-          style={{ width: "100%", height: "100%" }}
-        />
-      </div>
+  const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = emailRef.current?.value.trim() ?? "";
+    const password = passwordRef.current?.value ?? "";
+
+    const newInvalid = new Set<string>();
+    const newFieldErrors: Record<string, string> = {};
+
+    if (!email) { newInvalid.add("email"); shakeField(animateEmail, emailScope); }
+    else if (!isValidEmail(email)) { newInvalid.add("email"); newFieldErrors.email = "common.invalidFormat"; shakeField(animateEmail, emailScope); }
+    if (!password) { newInvalid.add("password"); shakeField(animatePassword, passwordScope); }
+
+    setInvalid(newInvalid);
+    setFieldErrors(newFieldErrors);
+    if (newInvalid.size > 0) return;
+
+    setErrorKey(k => k + 1);
+    await signIn(email, password);
+  };
+
+  return (
+    <div className="relative min-h-svh w-full">
       {/* ── Top-right controls ───────────────────────────────────────────────── */}
       <div className="fixed top-5 right-5 z-20 flex items-center gap-2">
         <button
@@ -141,7 +158,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <p className="font-mono text-sm text-muted-foreground mb-5 text-center">
+          <p className="font-mono text-sm text-muted-foreground mb-5 text-center text-balance">
             <DecryptedText
               key={i18n.language}
               text={t("auth.login.subtitle")}
@@ -152,9 +169,9 @@ export default function LoginPage() {
             />
           </p>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+            <div ref={emailScope} className="space-y-1.5">
+              <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 <DecryptedText
                   key={i18n.language + 'email'}
                   text={t("auth.login.emailLabel")}
@@ -162,19 +179,28 @@ export default function LoginPage() {
                   speed={40}
                   sequential
                 />
+                <AnimatePresence>
+                  {fieldErrors.email && (
+                    <motion.span key="email-err" initial={{ opacity: 0, x: 4 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="text-destructive/80 font-mono text-[10px] tracking-wider">
+                      [{t(fieldErrors.email)}]
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
                 <input
+                  ref={emailRef}
                   type="email"
                   placeholder={t("auth.login.emailPlaceholder")}
                   autoComplete="email"
-                  className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
+                  onChange={() => { clearError(); setInvalid(s => { const n = new Set(s); n.delete("email"); return n; }); setFieldErrors(f => { const n = {...f}; delete n.email; return n; }); }}
+                  className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("email") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                 />
               </div>
             </div>
 
-            <div className="space-y-1.5">
+            <div ref={passwordScope} className="space-y-1.5">
               <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 <DecryptedText
                   key={i18n.language + 'password'}
@@ -187,10 +213,12 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 pointer-events-none" />
                 <input
+                  ref={passwordRef}
                   type={showPassword ? "text" : "password"}
                   placeholder={t("auth.login.passwordPlaceholder")}
                   autoComplete="current-password"
-                  className="w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border border-primary/15 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30 transition-colors"
+                  onChange={() => { clearError(); setInvalid(s => { const n = new Set(s); n.delete("password"); return n; }); }}
+                  className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("password") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                 />
                 <button
                   type="button"
@@ -220,12 +248,9 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2.5 rounded-lg text-sm transition-colors"
-            >
+            <AuthSubmitButton isLoading={isLoading} error={error} errorKey={errorKey}>
               {t("auth.login.submit")}
-            </button>
+            </AuthSubmitButton>
           </form>
 
           <div className="relative my-5">
