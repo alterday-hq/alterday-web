@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { AuthSubmitButton } from "@/components/ui/AuthSubmitButton";
+import { AuthSubmitButton } from "@/components/ui/button";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import GlitchText from "@/components/GlitchText";
 import DecryptedText from "@/components/DecryptedText";
