@@ -19,7 +19,8 @@
       "headline2": "każdą",
       "headline3": "alternatywną",
       "headline4": "możliwość.",
-      "subtitle": "Rozpocznij symulację. Utwórz swoją tożsamość w systemie.",
+      "subtitle": "Rozpocznij symulację.",
+      "subtitle2": "Utwórz swoją tożsamość w systemie.",
       "subjectLabel": "Nazwa Podmiotu",
       "subjectPlaceholder": "nazwa_podmiotu",
       "emailLabel": "Adres Cyfrowy",
@@ -48,6 +49,12 @@
     "INVALID_ADDRESS": "ADRES_NIEPRAWIDŁOWY",
     "RATE_LIMIT_EXCEEDED": "PRZEKROCZONO_LIMIT",
     "SYSTEM_FAULT": "BŁĄD_SYSTEMU"
+  },
+  "notFound": {
+    "signal": "Sygnał Utracony",
+    "description": "Żądany węzeł nie istnieje w tej symulacji. Trasa została zakończona.",
+    "back": "← Wróć do poprzedniego węzła",
+    "banner": "TRASA_NIE_ZNALEZIONA :: SYGNAŁ_UTRACONY :: WĘZEŁ_ZAKOŃCZONY :: BŁĄD_SYMULACJI :: "
   },
   "common": {
     "showPassword": "Odkryj klucz dostępu",
