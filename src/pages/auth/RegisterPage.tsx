@@ -255,7 +255,7 @@ export default function RegisterPage() {
         <div className="w-full max-w-[380px] order-1 lg:order-2">
           {/* Title above the card — font sized to fit within max-w-[380px] */}
           <div
-            className="mb-4"
+            className=""
             style={
               {
                 "--glitch-bg": palette.background,
@@ -282,16 +282,14 @@ export default function RegisterPage() {
               <img src={isDark ? logoDark : logoLight} alt="Alterday" width={160} height={42} />
             </div>
 
-            <p className="font-mono text-sm text-muted-foreground mb-4 text-center text-balance">
-              <DecryptedText
-                key={i18n.language + "subtitle"}
-                text={t("auth.register.subtitle")}
-                animateOn="view"
-                sequential
-                speed={28}
-                revealDirection="start"
-              />
-            </p>
+            <div className="flex flex-col items-center gap-0.5 mb-4">
+              <p className="font-mono text-sm text-muted-foreground text-center">
+                <DecryptedText key={i18n.language + "subtitle"} text={t("auth.register.subtitle")} animateOn="view" sequential speed={28} revealDirection="start" />
+              </p>
+              <p className="font-mono text-sm text-muted-foreground text-center">
+                <DecryptedText key={i18n.language + "subtitle2"} text={t("auth.register.subtitle2")} animateOn="view" sequential speed={28} revealDirection="start" />
+              </p>
+            </div>
 
             <form className="space-y-3" onSubmit={handleSubmit} noValidate>
               {/* Subject Name */}
@@ -469,12 +467,12 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            <p className="mt-4 text-center text-xs font-mono text-muted-foreground/60">
-              {t("auth.register.hasAccount")}{" "}
-              <Link to="/login" className="text-primary/70 hover:text-primary transition-colors">
+            <div className="mt-4 flex flex-col items-center gap-1">
+              <span className="text-xs font-mono text-muted-foreground/60">{t("auth.register.hasAccount")}</span>
+              <Link to="/login" className="text-xs font-mono text-primary/70 hover:text-primary transition-colors">
                 {t("auth.register.signIn")}
               </Link>
-            </p>
+            </div>
           </div>
         </div>
       </div>
