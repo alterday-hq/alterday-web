@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useThemeStore } from "@/stores/useThemeStore";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { AnimatePresence, motion, useAnimate } from "motion/react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { AuthSubmitButton } from "@/components/ui/button";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Check } from "lucide-react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import GlitchText from "@/components/GlitchText";
 import DecryptedText from "@/components/DecryptedText";
@@ -61,10 +61,12 @@ export default function RegisterPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLInputElement>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [subjectScope, animateSubject] = useAnimate();
   const [emailScope, animateEmail] = useAnimate();
   const [passwordScope, animatePassword] = useAnimate();
   const [confirmScope, animateConfirm] = useAnimate();
+  const [termsScope, animateTerms] = useAnimate();
 
   const { signUp, isLoading, error, clearError } = useAuthStore();
 
@@ -112,6 +114,7 @@ export default function RegisterPage() {
     else if (!isStrongPassword(password)) { newInvalid.add("password"); newFieldErrors.password = "common.weakPassword"; setPasswordTouched(true); shakeField(animatePassword, passwordScope); }
     if (!confirm) { newInvalid.add("confirm"); shakeField(animateConfirm, confirmScope); }
     else if (password && confirm && password !== confirm) { newInvalid.add("confirm"); shakeField(animateConfirm, confirmScope); }
+    if (!termsAccepted) { newInvalid.add("terms"); shakeField(animateTerms, termsScope); }
 
     setInvalid(newInvalid);
     setFieldErrors(newFieldErrors);
@@ -291,7 +294,7 @@ export default function RegisterPage() {
               </p>
             </div>
 
-            <form className="space-y-3" onSubmit={handleSubmit} noValidate>
+            <form className="space-y-2" onSubmit={handleSubmit} noValidate>
               {/* Subject Name */}
               <div ref={subjectScope} className="space-y-1.5">
                 <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -319,7 +322,7 @@ export default function RegisterPage() {
                     placeholder={t("auth.register.subjectPlaceholder")}
                     autoComplete="username"
                     onChange={(e) => { clearField("subject"); setSubjectVal(e.target.value.trim()); }}
-                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("subject") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
+                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("subject") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                   />
                 </div>
               </div>
@@ -350,7 +353,7 @@ export default function RegisterPage() {
                     placeholder={t("auth.register.emailPlaceholder")}
                     autoComplete="email"
                     onChange={() => clearField("email")}
-                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("email") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
+                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-4 py-2 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("email") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                   />
                 </div>
               </div>
@@ -383,7 +386,7 @@ export default function RegisterPage() {
                     placeholder={t("auth.register.passwordPlaceholder")}
                     autoComplete="new-password"
                     onChange={(e) => { clearField("password"); setPasswordVal(e.target.value); }}
-                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("password") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
+                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("password") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                   />
                   <button
                     type="button"
@@ -415,7 +418,7 @@ export default function RegisterPage() {
                     placeholder={t("auth.register.confirmPlaceholder")}
                     autoComplete="new-password"
                     onChange={() => clearField("confirm")}
-                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("confirm") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
+                    className={cn("w-full bg-background/60 text-foreground placeholder:text-foreground/30 pl-10 pr-10 py-2 rounded-lg text-sm border focus:outline-none focus:ring-1 transition-colors", invalid.has("confirm") ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30" : "border-primary/15 focus:border-primary/60 focus:ring-primary/30")}
                   />
                   <button
                     type="button"
@@ -426,6 +429,49 @@ export default function RegisterPage() {
                     {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
                 </div>
+              </div>
+
+              {/* Terms & Privacy consent */}
+              <div ref={termsScope} className="flex items-center gap-2.5 pt-1">
+                <button
+                  type="button"
+                  role="checkbox"
+                  aria-checked={termsAccepted}
+                  onClick={() => { setTermsAccepted(v => !v); clearField("terms"); }}
+                  className={cn(
+                    "shrink-0 size-4 rounded flex items-center justify-center border transition-colors",
+                    termsAccepted
+                      ? "bg-primary border-primary"
+                      : invalid.has("terms")
+                        ? "border-destructive/60 bg-transparent hover:border-destructive"
+                        : "border-primary/30 bg-transparent hover:border-primary/60",
+                  )}
+                >
+                  {termsAccepted && <Check className="size-3 text-background" strokeWidth={3} />}
+                </button>
+                <span className="text-[10px] font-mono text-muted-foreground/70 leading-tight">
+                  <Trans
+                    i18nKey="auth.register.termsConsent"
+                    components={[
+                      <span key="0" />,
+                      <Link
+                        key="1"
+                        to="/terms"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary/70 hover:text-primary underline underline-offset-2 transition-colors"
+                      />,
+                      <span key="2" />,
+                      <Link
+                        key="3"
+                        to="/privacy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary/70 hover:text-primary underline underline-offset-2 transition-colors"
+                      />,
+                    ]}
+                  />
+                </span>
               </div>
 
               <AuthSubmitButton isLoading={isLoading} error={error} errorKey={errorKey}>
