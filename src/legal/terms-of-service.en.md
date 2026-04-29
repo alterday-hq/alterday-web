@@ -2,8 +2,6 @@
 
 **Last updated:** April 26, 2026
 
-> **Note:** This is an English translation provided for convenience. In case of any discrepancy, the Polish version (`terms-of-service.pl.md`) is the legally binding document.
-
 ---
 
 ## 1. General Provisions

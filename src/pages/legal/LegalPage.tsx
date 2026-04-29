@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -117,10 +118,17 @@ export default function LegalPage({ content, titleKey }: LegalPageProps) {
         <button
           type="button"
           onClick={handleBack}
-          className="flex items-center gap-1.5 font-mono text-xs text-foreground/50 hover:text-primary transition-colors"
+          className={cn(
+            "flex items-center gap-2 rounded-2xl px-4 py-2 backdrop-blur-2xl",
+            "font-mono text-sm tracking-widest uppercase text-foreground",
+            "transition-colors hover:border-primary/50 hover:text-primary",
+            isDark
+              ? "bg-card/80 border border-primary/20 shadow-2xl"
+              : "bg-card/90 border border-primary/30 shadow-[0_8px_40px_rgba(0,150,125,0.15)]",
+          )}
           aria-label={t("legal.back")}
         >
-          <ArrowLeft className="size-3.5" />
+          <ArrowLeft className="size-4" />
           {t("legal.back")}
         </button>
 
@@ -155,7 +163,7 @@ export default function LegalPage({ content, titleKey }: LegalPageProps) {
               {t(titleKey)}
             </span>
           </div>
-          <ReactMarkdown components={markdownComponents}>
+          <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
             {content}
           </ReactMarkdown>
         </div>
