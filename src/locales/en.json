@@ -19,7 +19,8 @@
       "headline2": "every",
       "headline3": "alternate",
       "headline4": "possibility.",
-      "subtitle": "Start your simulation. Create your identity in the system.",
+      "subtitle": "Start your simulation.",
+      "subtitle2": "Create your identity in the system.",
       "subjectLabel": "Subject Name",
       "subjectPlaceholder": "subject_name",
       "emailLabel": "Digital Address",
@@ -48,6 +49,17 @@
     "INVALID_ADDRESS": "INVALID_ADDRESS",
     "RATE_LIMIT_EXCEEDED": "RATE_LIMIT_EXCEEDED",
     "SYSTEM_FAULT": "SYSTEM_FAULT"
+  },
+  "notFound": {
+    "signal": "Signal Lost",
+    "description": "The requested node does not exist in this simulation. The route has been terminated.",
+    "back": "← Return to last node",
+    "banner": "ROUTE_NOT_FOUND :: SIGNAL_LOST :: NODE_TERMINATED :: SIMULATION_ERROR :: "
+  },
+  "legal": {
+    "back": "Back",
+    "privacyTitle": "Privacy Policy",
+    "termsTitle": "Terms of Service"
   },
   "common": {
     "showPassword": "Reveal access key",

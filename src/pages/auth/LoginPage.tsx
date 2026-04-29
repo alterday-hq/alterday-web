@@ -121,7 +121,7 @@ export default function LoginPage() {
       <div className="relative z-10 flex min-h-svh flex-col items-center justify-center px-4 py-8">
         {/* GlitchText floats directly on the grid background */}
         <div
-          className="mb-4 text-center"
+          className="text-center"
           style={
             {
               "--glitch-bg": palette.background,
@@ -286,15 +286,12 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <p className="mt-6 text-center text-xs font-mono text-muted-foreground/60">
-            {t("auth.login.noAccount")}{" "}
-            <Link
-              to="/register"
-              className="text-primary/70 hover:text-primary transition-colors"
-            >
+          <div className="mt-6 flex flex-col items-center gap-1">
+            <span className="text-xs font-mono text-muted-foreground/60">{t("auth.login.noAccount")}</span>
+            <Link to="/register" className="text-xs font-mono text-primary/70 hover:text-primary transition-colors">
               {t("auth.login.signUp")}
             </Link>
-          </p>
+          </div>
         </div>
       </div>
     </div>
