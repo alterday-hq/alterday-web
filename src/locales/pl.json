@@ -37,7 +37,8 @@
       "passwordMismatch": "Klucze dostępu nie są zgodne.",
       "emailSentTitle": "TOŻSAMOŚĆ OCZEKUJE",
       "emailSentBody": "Link potwierdzający wysłano na twój adres cyfrowy. Sprawdź skrzynkę aby aktywować konto.",
-      "emailSentAction": "Wróć do połączenia →"
+      "emailSentAction": "Wróć do połączenia →",
+      "termsConsent": "Akceptuję <1>Regulamin</1> i <3>Politykę prywatności</3>"
     }
   },
   "errors": {

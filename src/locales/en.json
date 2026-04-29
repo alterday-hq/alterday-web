@@ -37,7 +37,8 @@
       "passwordMismatch": "Access keys do not match.",
       "emailSentTitle": "IDENTITY PENDING",
       "emailSentBody": "Confirmation link dispatched to your digital address. Check your inbox to activate your account.",
-      "emailSentAction": "Return to connection →"
+      "emailSentAction": "Return to connection →",
+      "termsConsent": "I agree to the <1>Terms of Service</1> and <3>Privacy Policy</3>"
     }
   },
   "errors": {
