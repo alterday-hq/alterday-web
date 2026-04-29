@@ -56,6 +56,11 @@
     "back": "← Wróć do poprzedniego węzła",
     "banner": "TRASA_NIE_ZNALEZIONA :: SYGNAŁ_UTRACONY :: WĘZEŁ_ZAKOŃCZONY :: BŁĄD_SYMULACJI :: "
   },
+  "legal": {
+    "back": "Wróć",
+    "privacyTitle": "Polityka Prywatności",
+    "termsTitle": "Regulamin"
+  },
   "common": {
     "showPassword": "Odkryj klucz dostępu",
     "hidePassword": "Ukryj klucz dostępu",

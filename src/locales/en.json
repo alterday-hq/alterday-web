@@ -56,6 +56,11 @@
     "back": "← Return to last node",
     "banner": "ROUTE_NOT_FOUND :: SIGNAL_LOST :: NODE_TERMINATED :: SIMULATION_ERROR :: "
   },
+  "legal": {
+    "back": "Back",
+    "privacyTitle": "Privacy Policy",
+    "termsTitle": "Terms of Service"
+  },
   "common": {
     "showPassword": "Reveal access key",
     "hidePassword": "Conceal access key",
